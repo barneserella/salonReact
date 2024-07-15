@@ -21,15 +21,30 @@ const stylists = [
 
 const Booking = () => {
 
-    const [name, setName] = useState();
-    const [phoneNumber, setPhoneNumber] = useState();
-    const [email, setEmail] = useState();
-    const [service,setService] = useState();
-    const [stylist, setStylist] = useState();
-    const [date,setDate] = useState();
+    const [name, setName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [service,setService] = useState('');
+    const [stylist, setStylist] = useState('');
+    const [date,setDate] = useState(new Date());
 
-    const handleSubmit = () => {
+    const navigate = useNavigate();
 
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        const response = await fetch('http://localhost:5000/api/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({name,email,phoneNumber,date,service,stylist})
+        })
+        if(response.ok) {
+            alert(`Booking for ${name} on ${date.toLocaleDateString()} was successful. We will send an email to ${email} with available times.`);
+            navigate('/');
+        }else {
+            alert('Booking failed. Please try again.')
+        }
     }
 
   return (
